@@ -1,0 +1,8 @@
+node class N; 
+
+edge class Hyperedge
+{
+	label:string;
+	vertex:array<N>;
+}
+undirected edge class Link; 

@@ -1,0 +1,108 @@
+using Model;
+
+rule init
+{
+	replace
+	{
+		N1:N;
+		N2:N;
+		N1 -a:Hyperedge-> N2; 
+		eval
+		{
+			a.label = "S";
+			a.vertex.add(N1); a.vertex.add(N2);
+		}
+	}
+}
+
+rule wh
+{
+		N1:N -a1:Hyperedge-> N2:N; 
+		if
+		{
+			a1.label == "S" && a1.vertex.size() == 2;
+		}
+	modify
+	{
+		N1 -:Link- N2; 
+		N1 -b1:Hyperedge-> N3:N;
+		N1 -c1:Hyperedge-> N4:N; 
+		N4 -:Link- N5:N; 
+		N3 -d1:Hyperedge-> N6:N; 
+		N6 -:Link- N12:N; 
+		N6 -e1:Hyperedge-> N18:N;
+		N5 -f1:Hyperedge-> N14:N; 
+		N2 -g1:Hyperedge-> N12; 
+		N2 -h1:Hyperedge-> N5; 
+		N4 -i1:Hyperedge-> N7:N; 
+		N7 -j1:Hyperedge-> N8:N; 
+		N7 -k1:Hyperedge-> N9:N; 
+		N9 -l1:Hyperedge-> N10:N; 
+		N9 -m1:Hyperedge-> N11:N; 
+		N10 -n1:Hyperedge-> N15:N; 
+		N11 -o1:Hyperedge-> N13:N; 
+		N13 -p1:Hyperedge-> N16:N; 
+		N12 -q1:Hyperedge-> N17:N; 
+		eval
+		{
+			b1.label = "CP"; 
+			b1.vertex.add(N3); b1.vertex.add(N4);
+			c1.label = "CP";
+			c1.vertex.add(N3); c1.vertex.add(N4); 
+			d1.label = "NP";
+			d1.vertex.add(N6); 
+			e1.label = "whom";
+			e1.vertex.add(N18); 
+			f1.label = "SEM_ARG";
+			f1.vertex.add(N14); 
+			g1.label = "interrogative";
+			g1.vertex.add(N12); g1.vertex.add(N5); 
+			h1.label = "interrogative";
+			h1.vertex.add(N12); h1.vertex.add(N5); 
+			i1.label = "C'";
+			i1.vertex.add(N7); 
+			j1.label = "S";
+			j1.vertex.add(N8); j1.vertex.add(N9);
+			k1.label = "S";
+			k1.vertex.add(N8); k1.vertex.add(N9);
+			l1.label = "VP";
+			l1.vertex.add(N10); l1.vertex.add(N11);
+			m1.label = "VP";
+			m1.vertex.add(N10); m1.vertex.add(N11);			
+			n1.label = "V";
+			n1.vertex.add(N15); 
+			o1.label = "NP";
+			o1.vertex.add(N13); 
+			p1.label = "Lambda"; 
+			p1.vertex.add(N16); 
+			q1.label= "indefinite";
+			q1.vertex.add(N17); 
+		}
+	}
+}
+
+rule does
+{
+	N1:N -a2:Hyperedge-> N2:N; 
+	if 
+	{
+		a2.label == "C'" && a2.vertex.size() == 1;
+	}
+	modify
+	{
+		N1 -b2:Hyperedge-> N2; 
+		N1 -c2:Hyperedge-> N3:N;
+		N2 -d2:Hyperedge-> N4:N; 
+		N3 -e2:Hyperedge-> N5:N; 
+		eval
+		{
+			b2.label = "C'"; 
+			b2.vertex.add(N3); b2.vertex.add(N2);
+			c2.label = "C'";
+			c2.vertex.add(N2); c2.vertex.add(N3); 
+			d2.label = "C";
+			d2.vertex.add(N4); 
+			e2.label = "does"; 
+		}
+	}
+}

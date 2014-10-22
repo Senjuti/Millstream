@@ -1,0 +1,182 @@
+using Model;
+
+rule init
+{
+	replace
+	{
+		N1:N;
+		N2:N;
+		N1 -a1:Hyperedge-> N2; 
+		eval
+		{
+			a1.label = "S";
+			a1.vertex.add(N1); a1.vertex.add(N2);
+		}
+	}
+}
+
+rule Mary
+{
+		N1:N -a:Hyperedge-> N2:N; 
+		if
+		{
+			a.label == "S" && a.vertex.size() == 2;
+		}
+	replace
+	{
+		N1 -:Link- N2; 
+		N1 -b:Hyperedge-> N3:N;
+		N2 -c:Hyperedge-> N4:N; 
+		N3 -:Link- N4;
+		N3 -d:Hyperedge-> N5:N;
+		N4 -e:Hyperedge-> N6:N; 
+		N5 -:Link- N6; 
+		N5 -h:Hyperedge-> N7:N; 
+		N6 -g:Hyperedge-> N8:N; 
+		eval
+		{
+			b.label = "SYN_ARG"; 
+			b.vertex.add(N1); b.vertex.add(N3);
+			c.label = "THETA_ROLE";
+			c.vertex.add(N2); c.vertex.add(N4); 
+			d.label = "NP";
+			d.vertex.add(N3); d.vertex.add(N5); 
+			e.label = "person"; 
+			e.vertex.add(N4); e.vertex.add(N6); 
+			h.label = "Mary"; g.label = "Mary"; 
+			h.vertex.add(N5); h.vertex.add(N7);
+			g.vertex.add(N6); g.vertex.add(N8); 
+		}
+	}
+}
+
+rule seems
+{
+	N1:N -:Link- N2:N; 
+	N1 -a2:Hyperedge-> N3:N; 
+	N2 -b2:Hyperedge-> N4:N;
+	N3 -:Link- N4; 
+	if
+	{
+		a2.label == "SYN_ARG" && b2.label == "THETA_ROLE" && a2.vertex.size() == 2 && b2.vertex.size() == 2;
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N1 -c2:Hyperedge-> N3; 
+		N1 -d2:Hyperedge-> N4; 
+		N3 -:Link- N10:N; 
+		N4 -e2:Hyperedge-> N6:N; 
+		N4 -f2:Hyperedge-> N7:N; 
+		N6 -:Link- N2; 
+		N7 -:Link- N5:N; 
+		N6 -g2:Hyperedge-> N8:N; 
+		N8 -h2:Hyperedge-> N11:N; 
+		N7 -i2:Hyperedge-> N9:N; 
+		N5 -j2:Hyperedge-> N10;
+		eval
+		{
+			c2.label = "S"; 
+			c2.vertex.add(N1); c2.vertex.add(N3); c2.vertex.add(N4); 
+			d2.label = "S";
+			d2.vertex.add(N1); d2.vertex.add(N3); d2.vertex.add(N4);
+			e2.label = "VP"; 
+			e2.vertex.add(N4); e2.vertex.add(N6); e2.vertex.add(N7); 
+			f2.label = "VP";
+			f2.vertex.add(N4); f2.vertex.add(N6); f2.vertex.add(N7);
+			g2.label = "VP"; 
+			g2.vertex.add(N8); g2.vertex.add(N6); 
+			h2.label = "seems"; 
+			h2.vertex.add(N11); h2.vertex.add(N8); 
+			i2.label = "INF_COMPL"; 
+			i2.vertex.add(N9); i2.vertex.add(N7); 
+			j2.label = "EV"; 
+			j2.vertex.add(N10); j2.vertex.add(N5); 
+		}
+	}
+}
+
+rule tries
+{
+	N1:N -:Link- N2:N; 
+	N1 -a3:Hyperedge-> N3:N; 
+	N2 -b3:Hyperedge-> N4:N;
+	N3 -:Link- N4; 
+	if
+	{
+		a3.label == "SYN_ARG" &&  b3.label == "THETA_ROLE" && a3.vertex.size() == 2 && b3.vertex.size() == 2; 
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N3 -:Link- N5:N;
+		N8:N -:Link- N2; 
+		N7:N -:Link- N6:N; 
+		N1 -c3:Hyperedge-> N3;
+		N1 -d3:Hyperedge-> N4; 
+		N4 -e3:Hyperedge-> N8;
+		N4 -f3:Hyperedge-> N7; 
+		N7 -g3:Hyperedge-> N10:N; 
+		N8 -h3:Hyperedge-> N9:N; 
+		N9 -i3:Hyperedge-> N12:N; 
+		N2 -j3:Hyperedge-> N5;
+		N2 -k3:Hyperedge-> N6; 
+		N6 -l3:Hyperedge-> N11:N; 
+		N5 -m3:Hyperedge-> N11; 
+		eval
+		{
+			c3.label = "S"; 
+			c3.vertex.add(N3); c3.vertex.add(N4); c3.vertex.add(N1); 
+			d3.label = "S"; 
+			d3.vertex.add(N3); d3.vertex.add(N3); d3.vertex.add(N1);
+			e3.label = "VP"; 
+			e3.vertex.add(N8); e3.vertex.add(N7); e3.vertex.add(N4);
+			f3.label = "VP"; 
+			f3.vertex.add(N8); f3.vertex.add(N7); f3.vertex.add(N4);
+			g3.label = "INF_COMP"; 
+			g3.vertex.add(N10); g3.vertex.add(N7);
+			h3.label = "V"; 
+			h3.vertex.add(N9); h3.vertex.add(N8);
+			i3.label = "tries"; 
+			i3.vertex.add(N11); i3.vertex.add(N9);
+			j3.label = "trying"; 
+			j3.vertex.add(N5); j3.vertex.add(N6); j3.vertex.add(N2); 
+			k3.label = "trying"; 
+			k3.vertex.add(N5); k3.vertex.add(N6); k3.vertex.add(N2);
+			l3.label = "EV";
+			l3.vertex.add(N6); l3.vertex.add(N11); 
+			m3.label = "EV";
+			m3.vertex.add(N6); m3.vertex.add(N11); 
+		}
+	}
+}
+
+rule tosleep
+{
+	N1:N -:Link- N2:N; 
+	N1 -a4:Hyperedge-> N3:N; 
+	N2 -b4:Hyperedge-> N4:N;
+	if
+	{
+		a4.label == "INF_COMPL" && b4.label == "EV" && a4.vertex.size() == 2 && b4.vertex.size() == 2;   
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N2 -c4:Hyperedge-> N4; 
+		N1 -f4:Hyperedge-> N3; 
+		N3 -d4:Hyperedge-> N5:N; 
+		N5 -e4:Hyperedge-> N6:N; 
+		eval
+		{
+			f4.label = "IC";
+			f4.vertex.add(N1); f4.vertex.add(N3); 
+			c4.label = "sleeping"; 
+			c4.vertex.add(N4); c4.vertex.add(N2); 
+			d4.label = "V"; 
+			d4.vertex.add(N5); d4.vertex.add(N3); 
+			e4.label = "to sleep"; 
+			e4.vertex.add(N6); e4.vertex.add(N5); 
+		}
+	}
+}

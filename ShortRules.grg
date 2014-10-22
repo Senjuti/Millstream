@@ -1,0 +1,501 @@
+using Model;
+
+rule init
+{
+	replace
+	{
+		N0:N -:Link- N1:N; 
+		N0 -:Link- N2:N; 
+		N1 -a:Hyperedge-> N2;
+		eval
+		{
+			a.label = "S";
+			a.vertex.add(N1); a.vertex.add(N2);
+		}
+	}
+}
+
+rule ProperNoun
+{
+		N1:N -a:Hyperedge-> N2:N; 
+		if
+		{
+			a.label == "S" && a.vertex.size() == 2;
+		}
+	replace
+	{
+		N1 -:Link- N2; 
+		N1 -b:Hyperedge-> N3:N;
+		N2 -c:Hyperedge-> N4:N; 
+		N3 -:Link- N4;
+		N3 -d:Hyperedge-> N5:N;
+		N4 -e:Hyperedge-> N6:N; 
+		N5 -:Link- N6; 
+		N5 -h:Hyperedge-> N7:N; 
+		N6 -g:Hyperedge-> N8:N; 
+		eval
+		{
+			b.label = "SYN_ARG"; 
+			b.vertex.add(N1); b.vertex.add(N3);
+			c.label = "THETA_ROLE";
+			c.vertex.add(N2); c.vertex.add(N4); 
+			d.label = "NP";
+			d.vertex.add(N3); d.vertex.add(N5); 
+			e.label = "person"; 
+			e.vertex.add(N4); e.vertex.add(N6); 
+			h.label = "Akhil"; g.label = "Akhil"; 
+			h.vertex.add(N5); h.vertex.add(N7);
+			g.vertex.add(N6); g.vertex.add(N8); 
+		}
+	}
+}
+
+rule loves
+{
+	N1:N -:Link- N2:N; 
+	N1 -a:Hyperedge-> N3:N;
+	N2 -b:Hyperedge-> N4:N;
+	N3 -:Link- N4;
+	if
+	{
+		a.label == "SYN_ARG" && b.label == "THETA_ROLE" && a.vertex.size() == 2 && b.vertex.size() == 2;
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N3 -:Link- N4; 
+		N1 -c:Hyperedge-> N3; 
+		N1 -d:Hyperedge-> N5:N; 
+		N2 -e:Hyperedge-> N4; 
+		N2 -f:Hyperedge-> N9:N; 
+		N9 -g:Hyperedge-> N11:N; 
+		N7:N -:Link- N9;
+		N7 -h:Hyperedge-> N10:N; 
+		N5 -i:Hyperedge-> N6:N; 
+		N5 -j:Hyperedge-> N7; 
+		N6 -k:Hyperedge-> N8:N;
+		eval
+		{
+			c.label = "S"; 
+			c.vertex.add(N3); c.vertex.add(N5); c.vertex.add(N1);
+			d.label = "S";
+			d.vertex.add(N3); d.vertex.add(N5); d.vertex.add(N1);
+			e.label = "loving"; 
+			e.vertex.add(N4); e.vertex.add(N9); e.vertex.add(N2);
+			f.label = "loving";
+			f.vertex.add(N4); f.vertex.add(N9); f.vertex.add(N2); 
+			g.label = "SEM_ARG"; 
+			g.vertex.add(N9); g.vertex.add(N11); 
+			h.label = "OBJ"; 
+			h.vertex.add(N7); h.vertex.add(N10); 
+			i.label = "VP"; 
+			i.vertex.add(N7); i.vertex.add(N6); i.vertex.add(N5);
+			j.label = "VP";			
+			j.vertex.add(N6); j.vertex.add(N7); j.vertex.add(N5);
+			k.label = "V"; 
+			k.vertex.add(N8); k.vertex.add(N6); 
+		}
+	}
+}
+
+rule seems
+{
+	N1:N -:Link- N2:N; 
+	N1 -a2:Hyperedge-> N3:N; 
+	N2 -b2:Hyperedge-> N4:N;
+	N3 -:Link- N4; 
+	if
+	{
+		a2.label == "SYN_ARG" && b2.label == "THETA_ROLE" && a2.vertex.size() == 2 && b2.vertex.size() == 2;
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N1 -c2:Hyperedge-> N3; 
+		N1 -d2:Hyperedge-> N4; 
+		N3 -:Link- N10:N; 
+		N4 -e2:Hyperedge-> N6:N; 
+		N4 -f2:Hyperedge-> N7:N; 
+		N6 -:Link- N2; 
+		N7 -:Link- N5:N; 
+		N6 -g2:Hyperedge-> N8:N; 
+		N8 -h2:Hyperedge-> N11:N; 
+		N7 -i2:Hyperedge-> N9:N; 
+		N5 -j2:Hyperedge-> N10;
+		eval
+		{
+			c2.label = "S"; 
+			c2.vertex.add(N1); c2.vertex.add(N3); c2.vertex.add(N4); 
+			d2.label = "S";
+			d2.vertex.add(N1); d2.vertex.add(N3); d2.vertex.add(N4);
+			e2.label = "VP"; 
+			e2.vertex.add(N4); e2.vertex.add(N6); e2.vertex.add(N7); 
+			f2.label = "VP";
+			f2.vertex.add(N4); f2.vertex.add(N6); f2.vertex.add(N7);
+			g2.label = "VP"; 
+			g2.vertex.add(N8); g2.vertex.add(N6); 
+			h2.label = "seems"; 
+			h2.vertex.add(N11); h2.vertex.add(N8); 
+			i2.label = "INF_COMPL"; 
+			i2.vertex.add(N9); i2.vertex.add(N7); 
+			j2.label = "EV"; 
+			j2.vertex.add(N10); j2.vertex.add(N5); 
+		}
+	}
+}
+
+rule tries
+{
+	N1:N -:Link- N2:N; 
+	N1 -a3:Hyperedge-> N3:N; 
+	N2 -b3:Hyperedge-> N4:N;
+	N3 -:Link- N4; 
+	if
+	{
+		a3.label == "SYN_ARG" &&  b3.label == "THETA_ROLE" && a3.vertex.size() == 2 && b3.vertex.size() == 2; 
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N3 -:Link- N5:N;
+		N8:N -:Link- N2; 
+		N7:N -:Link- N6:N; 
+		N1 -c3:Hyperedge-> N3;
+		N1 -d3:Hyperedge-> N4; 
+		N4 -e3:Hyperedge-> N8;
+		N4 -f3:Hyperedge-> N7; 
+		N7 -g3:Hyperedge-> N10:N; 
+		N8 -h3:Hyperedge-> N9:N; 
+		N9 -i3:Hyperedge-> N12:N; 
+		N2 -j3:Hyperedge-> N5;
+		N2 -k3:Hyperedge-> N6; 
+		N6 -l3:Hyperedge-> N11:N; 
+		N5 -m3:Hyperedge-> N11; 
+		eval
+		{
+			c3.label = "S"; 
+			c3.vertex.add(N3); c3.vertex.add(N4); c3.vertex.add(N1); 
+			d3.label = "S"; 
+			d3.vertex.add(N3); d3.vertex.add(N3); d3.vertex.add(N1);
+			e3.label = "VP"; 
+			e3.vertex.add(N8); e3.vertex.add(N7); e3.vertex.add(N4);
+			f3.label = "VP"; 
+			f3.vertex.add(N8); f3.vertex.add(N7); f3.vertex.add(N4);
+			g3.label = "INF_COMP"; 
+			g3.vertex.add(N10); g3.vertex.add(N7);
+			h3.label = "V"; 
+			h3.vertex.add(N9); h3.vertex.add(N8);
+			i3.label = "tries"; 
+			i3.vertex.add(N11); i3.vertex.add(N9);
+			j3.label = "trying"; 
+			j3.vertex.add(N5); j3.vertex.add(N6); j3.vertex.add(N2); 
+			k3.label = "trying"; 
+			k3.vertex.add(N5); k3.vertex.add(N6); k3.vertex.add(N2);
+			l3.label = "EV";
+			l3.vertex.add(N6); l3.vertex.add(N11); 
+			m3.label = "EV";
+			m3.vertex.add(N6); m3.vertex.add(N11); 
+		}
+	}
+}
+
+rule tosleep
+{
+	N1:N -:Link- N2:N; 
+	N1 -a4:Hyperedge-> N3:N; 
+	N2 -b4:Hyperedge-> N4:N;
+	if
+	{
+		a4.label == "INF_COMPL" && b4.label == "EV" && a4.vertex.size() == 2 && b4.vertex.size() == 2;   
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N2 -c4:Hyperedge-> N4; 
+		N1 -f4:Hyperedge-> N3; 
+		N3 -d4:Hyperedge-> N5:N; 
+		N5 -e4:Hyperedge-> N6:N; 
+		eval
+		{
+			f4.label = "IC";
+			f4.vertex.add(N1); f4.vertex.add(N3); 
+			c4.label = "sleeping"; 
+			c4.vertex.add(N4); c4.vertex.add(N2); 
+			d4.label = "V"; 
+			d4.vertex.add(N5); d4.vertex.add(N3); 
+			e4.label = "to sleep"; 
+			e4.vertex.add(N6); e4.vertex.add(N5); 
+		}
+	}
+}
+
+rule does
+{
+	N1:N -a2:Hyperedge-> N2:N; 
+	if 
+	{
+		a2.label == "C'" && a2.vertex.size() == 1;
+	}
+	modify
+	{
+		N1 -b2:Hyperedge-> N2; 
+		N1 -c2:Hyperedge-> N3:N;
+		N2 -d2:Hyperedge-> N4:N; 
+		N3 -e2:Hyperedge-> N5:N; 
+		eval
+		{
+			b2.label = "C'"; 
+			b2.vertex.add(N3); b2.vertex.add(N2);
+			c2.label = "C'";
+			c2.vertex.add(N2); c2.vertex.add(N3); 
+			d2.label = "C";
+			d2.vertex.add(N4); 
+			e2.label = "does"; 
+		}
+	}
+}
+
+rule claims
+{
+	N1:N -:Link- N2:N; 
+	N1 -a4:Hyperedge-> N3:N; 
+	N2 -b4:Hyperedge-> N4:N;
+	N3 -:Link- N4; 
+	if
+	{
+		a4.label == "SYN_ARG" && b4.label == "THETA_ROLE" && a4.vertex.size() == 2 && b4.vertex.size() == 2; 
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N1 -c4:Hyperedge-> N3;
+		N1 -d4:Hyperedge-> N4; 
+		N4 -e4:Hyperedge-> N7:N; 
+		N4 -f4:Hyperedge-> N8:N; 
+		N7 -g4:Hyperedge-> N9:N; 
+		N8 -h4:Hyperedge-> N10:N; 
+		N6:N -i4:Hyperedge-> N11:N; 
+		N2 -j4:Hyperedge-> N6; 
+		N2 -k4:Hyperedge-> N5:N; 
+		N3 -:Link- N5; 
+		N8 -:Link- N6; 
+		N9 -l4:Hyperedge-> N12:N;
+		N7 -:Link- N2; 
+		eval
+		{
+			c4.label = "S"; 
+			c4.vertex.add(N3); c4.vertex.add(N4); c4.vertex.add(N1); 
+			d4.label = "S"; 
+			d4.vertex.add(N3); d4.vertex.add(N4); d4.vertex.add(N1); 
+			e4.label = "VP"; 
+			e4.vertex.add(N7); e4.vertex.add(N8); e4.vertex.add(N4); 
+			f4.label = "VP"; 
+			f4.vertex.add(N7); f4.vertex.add(N8); f4.vertex.add(N4); 
+			g4.label = "V"; 
+			g4.vertex.add(N9); g4.vertex.add(N7);
+			h4.label = "CP"; 
+			h4.vertex.add(N10); h4.vertex.add(N8);
+			i4.label = "SEM_ARG"; 
+			i4.vertex.add(N11); i4.vertex.add(N6);
+			j4.label = "claiming"; 
+			j4.vertex.add(N5); j4.vertex.add(N6); j4.vertex.add(N2); 
+			k4.label = "claiming"; 
+			k4.vertex.add(N5); k4.vertex.add(N6); k4.vertex.add(N2); 
+			l4.label = "claims"; 
+			l4.vertex.add(N12); l4.vertex.add(N9); 
+		}
+	}
+}
+
+rule knows
+{
+	N1:N -:Link- N2:N; 
+	N1 -a5:Hyperedge-> N3:N; 
+	N2 -b5:Hyperedge-> N4:N;
+	N3 -:Link- N4; 
+	if
+	{
+		a5.label == "SYN_ARG" && b5.label == "THETA_ROLE" && a5.vertex.size() == 2 && b5.vertex.size() == 2;
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N1 -c5:Hyperedge-> N3;
+		N1 -d5:Hyperedge-> N4; 
+		N4 -e5:Hyperedge-> N7:N; 
+		N4 -f5:Hyperedge-> N8:N; 
+		N7 -g5:Hyperedge-> N9:N; 
+		N8 -h5:Hyperedge-> N10:N; 
+		N6:N -i5:Hyperedge-> N11:N; 
+		N2 -j5:Hyperedge-> N6; 
+		N2 -k5:Hyperedge-> N5:N; 
+		N3 -:Link- N5; 
+		N8 -:Link- N6; 
+		N9 -l5:Hyperedge-> N12:N; 
+		N7 -:Link- N2;
+		eval
+		{
+			c5.label = "S"; 
+			c5.vertex.add(N3); c5.vertex.add(N4); c5.vertex.add(N1);
+			d5.label = "S"; 
+			d5.vertex.add(N3); d5.vertex.add(N4); d5.vertex.add(N1); 
+			e5.label = "VP"; 
+			e5.vertex.add(N7); e5.vertex.add(N8); e5.vertex.add(N4);
+			f5.label = "VP"; 
+			f5.vertex.add(N7); f5.vertex.add(N8); f5.vertex.add(N4);
+			g5.label = "V"; 
+			g5.vertex.add(N9); g5.vertex.add(N7);
+			h5.label = "CP"; 
+			h5.vertex.add(N10); h5.vertex.add(N8);
+			i5.label = "SEM_ARG"; 
+			i5.vertex.add(N11); i5.vertex.add(N6);
+			j5.label = "knowing"; 
+			j5.vertex.add(N5); j5.vertex.add(N6); j5.vertex.add(N2);
+			k5.label = "knowing"; 
+			k5.vertex.add(N5); k5.vertex.add(N6); k5.vertex.add(N2);
+			l5.label = "knows"; 
+			l5.vertex.add(N12); l5.vertex.add(N9); 
+		}
+	}
+}
+
+rule cheated
+{
+	N1:N -:Link- N2:N; 
+	N1 -a6:Hyperedge-> N3:N; 
+	N2 -b6:Hyperedge-> N4:N;
+	N3 -:Link- N4; 
+	if
+	{
+		a6.label == "SYN_ARG" && b6.label == "THETA_ROLE" && a6.vertex.size() == 2 && b6.vertex.size() == 2; 
+	}
+	replace
+	{
+		N1 -:Link- N2;
+		N1 -c6:Hyperedge-> N4;
+		N1 -d6:Hyperedge-> N5:N; 
+		N4 -:Link- N3; 
+		N2 -e6:Hyperedge-> N3; 
+		N5 -f6:Hyperedge-> N6:N; 
+		N6 -:Link- N2; 
+		N6 -g6:Hyperedge-> N7:N;
+		N7 -h6:Hyperedge-> N8:N; 
+		eval
+		{
+			c6.label = "S"; 
+			c6.vertex.add(N4); c6.vertex.add(N5); c6.vertex.add(N1); 
+			d6.label = "S"; 
+			d6.vertex.add(N4); d6.vertex.add(N5); d6.vertex.add(N1); 
+			e6.label = "cheating"; 
+			e6.vertex.add(N3); e6.vertex.add(N2); 
+			f6.label = "VP"; 
+			f6.vertex.add(N5); f6.vertex.add(N6); 
+			g6.label = "V"; 
+			g6.vertex.add(N7); g6.vertex.add(N6); 
+			h6.label = "cheated"; 
+			h6.vertex.add(N8); h6.vertex.add(N7); 
+		}
+	}
+}
+
+rule that
+{
+	N1:N -:Link- N2:N; 
+	N1 -a7:Hyperedge-> N3:N; 
+	N2 -b7:Hyperedge-> N4:N;
+	if
+	{
+		a7.label == "CP" && b7.label == "SEM_ARG" && a7.vertex.size() == 2 && b7.vertex.size() == 2; 
+	}
+	replace
+	{
+	N1 -:Link- N2; 
+	N1 -c7:Hyperedge-> N3; 
+	N1 -d7:Hyperedge-> N5:N; 
+	N2 -e7:Hyperedge-> N4; 
+	N5 -f7:Hyperedge-> N4;
+	N3 -h7:Hyperedge-> N6:N; 
+	N6 -i7:Hyperedge-> N8:N; 
+	eval
+	{
+		c7.label = "CP"; 
+		c7.vertex.add(N3); c7.vertex.add(N5); c7.vertex.add(N1); 
+		d7.label = "CP"; 
+		d7.vertex.add(N3); d7.vertex.add(N5); d7.vertex.add(N1); 
+		e7.label = "fact"; 
+		e7.vertex.add(N4); e7.vertex.add(N2); 
+		f7.label = "S"; 
+		f7.vertex.add(N5); f7.vertex.add(N4); 
+		h7.label = "C"; 
+		h7.vertex.add(N6); h7.vertex.add(N3); 
+		i7.label = "that"; 
+		i7.vertex.add(N8); i7.vertex.add(N6); 
+	}
+	}
+}
+
+rule wh
+{
+		N1:N -a1:Hyperedge-> N2:N; 
+		if
+		{
+			a1.label == "S" && a1.vertex.size() == 2;
+		}
+	modify
+	{
+		N1 -:Link- N2; 
+		N1 -b1:Hyperedge-> N3:N;
+		N1 -c1:Hyperedge-> N4:N; 
+		N4 -:Link- N5:N; 
+		N3 -d1:Hyperedge-> N6:N; 
+		N6 -:Link- N12:N; 
+		N6 -e1:Hyperedge-> N18:N;
+		N5 -f1:Hyperedge-> N14:N; 
+		N2 -g1:Hyperedge-> N12; 
+		N2 -h1:Hyperedge-> N5; 
+		N4 -i1:Hyperedge-> N7:N; 
+		N7 -j1:Hyperedge-> N8:N; 
+		N7 -k1:Hyperedge-> N9:N; 
+		N9 -l1:Hyperedge-> N10:N; 
+		N9 -m1:Hyperedge-> N11:N; 
+		N10 -n1:Hyperedge-> N15:N; 
+		N11 -o1:Hyperedge-> N13:N; 
+		N13 -p1:Hyperedge-> N16:N; 
+		N12 -q1:Hyperedge-> N17:N; 
+		eval
+		{
+			b1.label = "CP"; 
+			b1.vertex.add(N3); b1.vertex.add(N4);
+			c1.label = "CP";
+			c1.vertex.add(N3); c1.vertex.add(N4); 
+			d1.label = "NP";
+			d1.vertex.add(N6); 
+			e1.label = "whom";
+			e1.vertex.add(N18); 
+			f1.label = "SEM_ARG";
+			f1.vertex.add(N14); 
+			g1.label = "interrogative";
+			g1.vertex.add(N12); g1.vertex.add(N5); 
+			h1.label = "interrogative";
+			h1.vertex.add(N12); h1.vertex.add(N5); 
+			i1.label = "C'";
+			i1.vertex.add(N7); 
+			j1.label = "S";
+			j1.vertex.add(N8); j1.vertex.add(N9);
+			k1.label = "S";
+			k1.vertex.add(N8); k1.vertex.add(N9);
+			l1.label = "VP";
+			l1.vertex.add(N10); l1.vertex.add(N11);
+			m1.label = "VP";
+			m1.vertex.add(N10); m1.vertex.add(N11);			
+			n1.label = "V";
+			n1.vertex.add(N15); 
+			o1.label = "NP";
+			o1.vertex.add(N13); 
+			p1.label = "Lambda"; 
+			p1.vertex.add(N16); 
+			q1.label= "indefinite";
+			q1.vertex.add(N17); 
+		}
+	}
+}

@@ -1,0 +1,13 @@
+new graph "Rules.grg"
+
+debug set layout Hierarchic
+dump add edge Hyperedge shortinfotag label
+dump add edge Hyperedge shortinfotag vertex
+dump set node N labels off
+dump set edge Hyperedge labels off
+dump set edge Link labels off
+dump set edge Link color blue
+dump set edge Hyperedge color red
+debug exec init
+
+debug exec (Mary&Peter&loves)[1]

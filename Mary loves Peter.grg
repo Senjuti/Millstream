@@ -1,0 +1,126 @@
+using Model2;
+
+rule init
+{
+	replace
+	{
+		N1:N;
+		N2:N;
+		N1 -a:Hyperedge-> N2; 
+		eval
+		{
+			a.label = "S";
+			a.vertex.add(N1); a.vertex.add(N2);
+		}
+	}
+}
+
+rule Mary
+{
+		N1:N -a:Hyperedge-> N2:N; 
+		if
+		{
+			a.label == "S" && a.vertex.size() == 2;
+		}
+	replace
+	{
+		N1 -:Link- N2; 
+		N1 -b:Hyperedge-> N3:N;
+		N2 -c:Hyperedge-> N4:N; 
+		N3 -:Link- N4;
+		N3 -d:Hyperedge-> N5:N;
+		N4 -e:Hyperedge-> N6:N; 
+		N5 -:Link- N6; 
+		N5 -h:Hyperedge-> :N; 
+		N6 -g:Hyperedge-> :N; 
+		eval
+		{
+			b.label = "SYN_ARG"; 
+			b.vertex.add(N1); b.vertex.add(N3);
+			c.label = "THETA_ROLE";
+			c.vertex.add(N2); c.vertex.add(N4); 
+			d.label = "NP";
+			d.vertex.add(N3); d.vertex.add(N5); 
+			e.label = "person"; 
+			e.vertex.add(N4); e.vertex.add(N6); 
+			h.label = "Mary"; g.label = "Mary"; 
+		}
+	}
+}
+
+rule loves
+{
+	N1:N -:Link- N2:N; 
+	N1 -a:Hyperedge-> N3:N;
+	N2 -b:Hyperedge-> N4:N;
+	N3 -:Link- N4;
+	if
+	{
+		a.label == "SYN_ARG" && b.label == "THETA_ROLE" && a.vertex.size() == 2 && b.vertex.size() == 2;
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N3 -:Link- N4; 
+		N1 -c:Hyperedge-> N3; 
+		N1 -d:Hyperedge-> N5:N; 
+		N2 -e:Hyperedge-> N4; 
+		N2 -f:Hyperedge-> N9:N; 
+		N9 -g:Hyperedge-> N11:N; 
+		N7:N -:Link- N9;
+		N7 -h:Hyperedge-> N10:N; 
+		N5 -i:Hyperedge-> N6:N; 
+		N5 -j:Hyperedge-> N7; 
+		N6 -k:Hyperedge-> N8:N;
+		eval
+		{
+			c.label = "S"; 
+			c.vertex.add(N3); c.vertex.add(N5); c.vertex.add(N1);
+			d.label = "S";
+			d.vertex.add(N3); d.vertex.add(N5); d.vertex.add(N1);
+			e.label = "loving"; 
+			e.vertex.add(N4); e.vertex.add(N9); e.vertex.add(N2);
+			f.label = "loving";
+			f.vertex.add(N4); f.vertex.add(N9); f.vertex.add(N2); 
+			g.label = "SEM_ARG"; 
+			g.vertex.add(N9); g.vertex.add(N11); 
+			h.label = "OBJ"; 
+			h.vertex.add(N7); h.vertex.add(N10); 
+			i.label = "VP"; 
+			i.vertex.add(N7); i.vertex.add(N6); i.vertex.add(N5);
+			j.label = "VP";			
+			j.vertex.add(N6); j.vertex.add(N7); j.vertex.add(N5);
+			k.label = "V"; 
+			k.vertex.add(N8); k.vertex.add(N6); 
+		}
+	}
+}
+
+rule Peter
+{
+	N1:N -:Link- N2:N; 
+	N1 -a:Hyperedge-> N3:N;
+	N2 -b:Hyperedge-> N4:N; 
+	if
+	{
+		a.label == "OBJ" && a.vertex.size() == 2 && b.label == "SEM_ARG" && b.vertex.size() == 2;
+	}
+	replace
+	{
+		N1 -:Link- N2; 
+		N1 -a1:Hyperedge-> N3; 
+		N2 -b1:Hyperedge-> N4;
+		N3 -:Link- N4; 
+		N3 -c:Hyperedge-> N5:N; 
+		N4 -d:Hyperedge-> N6:N; 
+		eval
+		{
+			a1.label = "NP";
+			a1.vertex.add(N3); a1.vertex.add(N1); 
+			b1.label = "person"; 
+			b1.vertex.add(N4); b1.vertex.add(N2); 
+			c.label = "Peter"; c.vertex.add(N5); c.vertex.add(N3); 
+			d.label = "Peter"; d.vertex.add(N4); d.vertex.add(N6); 
+		}
+	}
+}
